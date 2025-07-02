@@ -154,15 +154,15 @@ def process_uploaded_image():
         )
 
         
-        kernel_open = cv2.getStructuringElement(cv2.MORPH_CROSS, (2, 2))
+        # kernel_open = cv2.getStructuringElement(cv2.MORPH_CROSS, (2, 2))
         kernel_dilate = cv2.getStructuringElement(cv2.MORPH_CROSS, (2, 2))
         kernel_close = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3,3))
 
-        opening = cv2.morphologyEx(thresh1, cv2.MORPH_OPEN, kernel_open, iterations=1)
+        # opening = cv2.morphologyEx(thresh1, cv2.MORPH_OPEN, kernel_open, iterations=1)
         
         
-        mask = np.ones(opening.shape, dtype=np.uint8) * 255
-        contours, _ = cv2.findContours(opening, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        mask = np.ones(thresh1.shape, dtype=np.uint8) * 255
+        contours, _ = cv2.findContours(thresh1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
         for contour in contours:
             area = cv2.contourArea(contour)
@@ -174,7 +174,7 @@ def process_uploaded_image():
                     cv2.fillPoly(mask, [contour], 0)
 
         
-        result = cv2.bitwise_and(opening, mask)
+        result = cv2.bitwise_and(thresh1, mask)
         dilation = cv2.dilate(result, kernel_dilate, iterations=1)
         closing = cv2.morphologyEx(dilation, cv2.MORPH_CLOSE, kernel_close, iterations=1)
         cv2.imshow('a',closing)
@@ -286,6 +286,7 @@ def process_uploaded_image():
         except Exception as e:
             print("Lỗi tính toán:", e)
             text.insert(END, s)
+            
         
     
         cv2.imshow('Processed Image', image_display)
@@ -313,11 +314,11 @@ def process_drawn_image():
     kernel_close = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2,2))
 
     dilation = cv2.dilate(thresh1, kernel_dilate, iterations=1)
-    cv2.imshow("dilation",dilation)
+    
     closing = cv2.morphologyEx(dilation, cv2.MORPH_CLOSE, kernel_close, iterations=1)
-    cv2.imshow("closing",closing)
+    
     thresh = cv2.ximgproc.thinning(closing)
-    cv2.imshow("thresh",thresh)
+    
     
     ctrs, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
