@@ -116,7 +116,7 @@ def merge_contours_morphology(image, contours):
     for contour in contours:
         cv2.fillPoly(mask, [contour], 255)
     
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 50))
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 30))
     closed = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
     
    
